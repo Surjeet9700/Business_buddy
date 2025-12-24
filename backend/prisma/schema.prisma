@@ -1,0 +1,351 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppRole {
+  admin
+  manager
+  contributor
+  viewer
+}
+
+enum PermissionAction {
+  create
+  read
+  update
+  delete
+  approve
+}
+
+enum FieldType {
+  text
+  number
+  email
+  dropdown
+  date
+  textarea
+  checkbox
+}
+
+enum SubmissionStatus {
+  draft
+  submitted
+  approved
+  rejected
+}
+
+enum WorkflowStatus {
+  draft
+  submitted
+  in_review
+  approved
+  rejected
+}
+
+enum WorkflowStepStatus {
+  pending
+  approved
+  rejected
+  skipped
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  APPROVE
+  REJECT
+  SUBMIT
+  ROLE_CHANGE
+  PASSWORD_RESET
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  name          String
+  avatar        String?
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLoginAt   DateTime? @map("last_login_at")
+  
+  userRoles         UserRole[]
+  createdForms      Form[]             @relation("FormCreator")
+  createdWorkflows  Workflow[]         @relation("WorkflowCreator")
+  submissions       Submission[]       @relation("SubmissionSubmitter")
+  approvals         WorkflowApproval[]
+  auditLogs         AuditLog[]
+  refreshTokens     RefreshToken[]
+  
+  @@map("users")
+  @@index([email])
+  @@index([isActive])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  revokedAt DateTime? @map("revoked_at")
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("refresh_tokens")
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        AppRole  @unique
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+  
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  resource    String           
+  action      PermissionAction
+  createdAt   DateTime         @default(now()) @map("created_at")
+  
+  rolePermissions RolePermission[]
+  
+  @@map("permissions")
+  @@unique([resource, action])
+  @@index([resource])
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  roleId    String   @map("role_id")
+  grantedAt DateTime @default(now()) @map("granted_at")
+  grantedBy String?  @map("granted_by")
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, roleId])
+  @@map("user_roles")
+  @@index([userId])
+  @@index([roleId])
+}
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String   @map("role_id")
+  permissionId String   @map("permission_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+
+
+model Form {
+  id             String   @id @default(uuid())
+  name           String
+  description    String?
+  currentVersion Int      @default(1) @map("current_version")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdBy      String   @map("created_by")
+  workflowId     String?  @map("workflow_id")
+  
+  permissions    Json     @default("{\"canView\":[],\"canSubmit\":[],\"canApprove\":[]}")
+  
+  creator     User          @relation("FormCreator", fields: [createdBy], references: [id])
+  workflow    Workflow?     @relation(fields: [workflowId], references: [id])
+  versions    FormVersion[]
+  submissions Submission[]
+  
+  @@map("forms")
+  @@index([createdBy])
+  @@index([workflowId])
+  @@index([isActive])
+  @@index([createdAt])
+}
+
+model FormVersion {
+  id        String   @id @default(uuid())
+  formId    String   @map("form_id")
+  version   Int
+  schema    Json     
+  changelog String?
+  createdAt DateTime @default(now()) @map("created_at")
+  createdBy String   @map("created_by")
+  
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+  
+  @@unique([formId, version])
+  @@map("form_versions")
+  @@index([formId])
+  @@index([version])
+}
+
+
+
+model Submission {
+  id          String           @id @default(uuid())
+  formId      String           @map("form_id")
+  formVersion Int              @map("form_version")
+  data        Json             
+  status      SubmissionStatus @default(draft)
+  submittedBy String           @map("submitted_by")
+  submittedAt DateTime?        @map("submitted_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  
+  form             Form              @relation(fields: [formId], references: [id])
+  submitter        User              @relation("SubmissionSubmitter", fields: [submittedBy], references: [id])
+  workflowInstance WorkflowInstance?
+  
+  @@map("submissions")
+  @@index([formId])
+  @@index([submittedBy])
+  @@index([status])
+  @@index([createdAt])
+  @@index([formId, status])
+}
+
+
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdBy   String   @map("created_by")
+  
+  creator   User               @relation("WorkflowCreator", fields: [createdBy], references: [id])
+  steps     WorkflowStep[]
+  forms     Form[]
+  instances WorkflowInstance[]
+  
+  @@map("workflows")
+  @@index([createdBy])
+  @@index([isActive])
+}
+
+model WorkflowStep {
+  id                String    @id @default(uuid())
+  workflowId        String    @map("workflow_id")
+  name              String
+  description       String?
+  order             Int
+  approverRoles     AppRole[] @map("approver_roles")
+  requiredApprovals Int       @default(1) @map("required_approvals")
+  autoApprove       Boolean   @default(false) @map("auto_approve")
+  timeoutDays       Int?      @map("timeout_days")
+  
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  
+  @@unique([workflowId, order])
+  @@map("workflow_steps")
+  @@index([workflowId])
+}
+
+model WorkflowInstance {
+  id               String         @id @default(uuid())
+  workflowId       String         @map("workflow_id")
+  submissionId     String         @unique @map("submission_id")
+  currentStepIndex Int            @default(0) @map("current_step_index")
+  status           WorkflowStatus @default(submitted)
+  startedAt        DateTime       @default(now()) @map("started_at")
+  completedAt      DateTime?      @map("completed_at")
+  
+  workflow   Workflow               @relation(fields: [workflowId], references: [id])
+  submission Submission             @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  steps      WorkflowStepInstance[]
+  
+  @@map("workflow_instances")
+  @@index([workflowId])
+  @@index([status])
+  @@index([startedAt])
+}
+
+model WorkflowStepInstance {
+  id                 String             @id @default(uuid())
+  workflowInstanceId String             @map("workflow_instance_id")
+  stepId             String             @map("step_id")
+  stepOrder          Int                @map("step_order")
+  status             WorkflowStepStatus @default(pending)
+  startedAt          DateTime?          @map("started_at")
+  completedAt        DateTime?          @map("completed_at")
+  
+  workflowInstance WorkflowInstance   @relation(fields: [workflowInstanceId], references: [id], onDelete: Cascade)
+  approvals        WorkflowApproval[]
+  
+  @@unique([workflowInstanceId, stepOrder])
+  @@map("workflow_step_instances")
+  @@index([workflowInstanceId])
+  @@index([status])
+}
+
+model WorkflowApproval {
+  id                     String   @id @default(uuid())
+  workflowStepInstanceId String   @map("workflow_step_instance_id")
+  userId                 String   @map("user_id")
+  action                 String   
+  comment                String?
+  createdAt              DateTime @default(now()) @map("created_at")
+  
+  stepInstance WorkflowStepInstance @relation(fields: [workflowStepInstanceId], references: [id], onDelete: Cascade)
+  user         User                 @relation(fields: [userId], references: [id])
+  
+  @@map("workflow_approvals")
+  @@index([workflowStepInstanceId])
+  @@index([userId])
+}
+
+
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  userId     String      @map("user_id")
+  action     AuditAction
+  resource   String     
+  resourceId String      @map("resource_id")
+  oldValue   Json?       @map("old_value")
+  newValue   Json?       @map("new_value")
+  ipAddress  String?     @map("ip_address")
+  userAgent  String?     @map("user_agent")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("audit_logs")
+  @@index([userId])
+  @@index([resource, resourceId])
+  @@index([action])
+  @@index([createdAt])
+}

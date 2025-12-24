@@ -1,0 +1,64 @@
+import { Request, Response, NextFunction } from 'express';
+import { authService } from '@/services/auth.service';
+import { catchAsync } from '@/utils/asyncWrapper';
+import { z } from 'zod';
+
+const registerSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    name: z.string().min(2),
+});
+
+const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string(),
+});
+
+export class AuthController {
+    public register = catchAsync(async (req: Request, res: Response) => {
+        const validated = registerSchema.parse(req.body);
+        const user = await authService.register(validated);
+
+        res.status(201).json({
+            success: true,
+            data: {
+                user,
+                message: 'Account created. Please verify your email.',
+            },
+        });
+    });
+
+    public login = catchAsync(async (req: Request, res: Response) => {
+        const validated = loginSchema.parse(req.body);
+        const { user, tokens } = await authService.login(validated);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                ...tokens,
+                user,
+            },
+        });
+    });
+
+    public getCurrentUser = catchAsync(async (req: Request, res: Response) => {
+        // TODO: Get user from authenticated request (req.user)
+        // For now, return first user from database
+        const { db } = await import('@/config/database');
+        const user = await db.user.findFirst({
+            select: {
+                id: true,
+                email: true,
+                name: true
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.status(200).json({ success: true, data: user });
+    });
+}
+
+export const authController = new AuthController();
