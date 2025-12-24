@@ -23,14 +23,14 @@ export class Database {
             await this.client.$connect();
             console.log('✅ Database connected successfully');
         } catch (error) {
-            console.error('❌ Database connection failed:', error);
+            console.error('Database connection failed:', error);
             process.exit(1);
         }
     }
 
     public async disconnect(): Promise<void> {
         await this.client.$disconnect();
-        console.log('🔌 Database disconnected');
+        console.log('Database disconnected');
     }
 }
 
