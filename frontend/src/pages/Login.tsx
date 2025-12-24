@@ -63,7 +63,7 @@ export default function LoginPage() {
             toast.success('Welcome Guest!', { description: 'Logged in with demo account.' });
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
-            navigate('/');
+            navigate('/dashboard');
         },
         onError: (error) => {
             console.error("Guest Login Error:", error);
