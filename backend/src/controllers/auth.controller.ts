@@ -45,7 +45,13 @@ export class AuthController {
         // TODO: Get user from authenticated request (req.user)
         // For now, return first user from database
         const { db } = await import('@/config/database');
-        const user = await db.user.findFirst({
+
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ success: false, message: 'Not authenticated' });
+        }
+
+        const user = await db.user.findUnique({
+            where: { id: req.user.id },
             select: {
                 id: true,
                 email: true,

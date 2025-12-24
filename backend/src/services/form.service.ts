@@ -1,6 +1,6 @@
 import { db } from '@/config/database';
 import { AppError, NotFoundError } from '@/utils/AppError';
-import { Prisma } from '@prisma-client';
+import { Prisma } from '@prisma/client';
 
 export class FormService {
     private static instance: FormService;
@@ -19,12 +19,20 @@ export class FormService {
         search?: string;
         isActive?: boolean;
         hasWorkflow?: boolean;
+        userId?: string;
+        roles?: string[];
     }) {
         const page = params.page || 1;
         const pageSize = params.pageSize || 20;
         const skip = (page - 1) * pageSize;
 
         const where: Prisma.FormWhereInput = {};
+
+        // Data Isolation: If not admin, only show own forms
+        const isAdmin = params.roles?.some(role => role.toLowerCase() === 'admin');
+        if (params.userId && !isAdmin) {
+            where.createdBy = params.userId;
+        }
 
         if (params.search) {
             where.name = { contains: params.search, mode: 'insensitive' };

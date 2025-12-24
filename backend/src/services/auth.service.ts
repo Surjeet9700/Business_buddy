@@ -3,7 +3,7 @@ import { AppError, BadRequestError, UnauthorizedError } from '@/utils/AppError';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { env } from '@/config/env';
-import { User, AppRole } from '@prisma-client';
+import { User, AppRole } from '@prisma/client';
 
 interface RegisterDto {
     email: string;
@@ -82,7 +82,7 @@ export class AuthService {
             throw new UnauthorizedError('Account is disabled');
         }
 
-        const roles = user.userRoles.map(ur => ur.role.name);
+        const roles = user.userRoles.map((ur: any) => ur.role.name);
         const tokens = await this.generateTokens(user.id, roles);
 
         // Save refresh token
@@ -117,13 +117,13 @@ export class AuthService {
         const accessToken = jwt.sign(
             { userId, roles },
             env.JWT_SECRET,
-            { expiresIn: env.JWT_EXPIRES_IN }
+            { expiresIn: env.JWT_EXPIRES_IN } as jwt.SignOptions
         );
 
         const refreshToken = jwt.sign(
             { userId },
             env.REFRESH_TOKEN_SECRET,
-            { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN }
+            { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN } as jwt.SignOptions
         );
 
         return {

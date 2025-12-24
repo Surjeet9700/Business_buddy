@@ -41,7 +41,7 @@ export function Sidebar({ pendingApprovals = 0 }: SidebarProps) {
   const location = useLocation();
 
   const mainNavItems: NavItem[] = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Forms', href: '/forms', icon: FileText },
     {
       name: 'Submissions',

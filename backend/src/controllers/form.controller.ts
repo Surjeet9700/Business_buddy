@@ -28,7 +28,9 @@ export class FormController {
             pageSize: Number(req.query.pageSize) || 20,
             search: req.query.search as string,
             isActive: req.query.isActive === 'true' ? true : req.query.isActive === 'false' ? false : undefined,
-            hasWorkflow: req.query.hasWorkflow === 'true'
+            hasWorkflow: req.query.hasWorkflow === 'true',
+            userId: req.user?.id,
+            roles: req.user?.roles
         });
         res.status(200).json({ success: true, ...result });
     });
@@ -41,31 +43,22 @@ export class FormController {
     public create = catchAsync(async (req: Request, res: Response) => {
         const validated = createFormSchema.parse(req.body);
 
-        // TODO: Get userId from authenticated request (req.user.id)
-        // For now, get the first user from database
-        const { db } = await import('@/config/database');
-        const user = await db.user.findFirst();
-        if (!user) {
-            throw new Error('No users found in database. Please create a user first.');
+        if (!req.user || !req.user.id) {
+            throw new Error('User not authenticated');
         }
-        const userId = user.id;
 
-        const form = await formService.create({ ...validated, userId });
+        const form = await formService.create({ ...validated, userId: req.user.id });
         res.status(201).json({ success: true, data: form });
     });
 
     public update = catchAsync(async (req: Request, res: Response) => {
         const validated = updateFormSchema.parse(req.body);
 
-        // TODO: Get userId from authenticated request (req.user.id)
-        const { db } = await import('@/config/database');
-        const user = await db.user.findFirst();
-        if (!user) {
-            throw new Error('No users found in database.');
+        if (!req.user || !req.user.id) {
+            throw new Error('User not authenticated');
         }
-        const userId = user.id;
 
-        const form = await formService.update(req.params.id, { ...validated, userId });
+        const form = await formService.update(req.params.id, { ...validated, userId: req.user.id });
         res.status(200).json({ success: true, data: form });
     });
 
@@ -75,13 +68,11 @@ export class FormController {
     });
 
     public duplicate = catchAsync(async (req: Request, res: Response) => {
-        // Get userId from authenticated request
-        const { db } = await import('@/config/database');
-        const user = await db.user.findFirst();
-        if (!user) throw new Error('No users found in database.');
-        const userId = user.id;
+        if (!req.user || !req.user.id) {
+            throw new Error('User not authenticated');
+        }
 
-        const newForm = await formService.duplicate(req.params.id, userId);
+        const newForm = await formService.duplicate(req.params.id, req.user.id);
         res.status(201).json({ success: true, data: newForm });
     });
 }

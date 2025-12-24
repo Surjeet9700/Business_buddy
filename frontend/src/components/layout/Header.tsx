@@ -26,7 +26,7 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
   const { theme, setTheme } = useTheme();
 
   const { data: user } = useQuery({
-    queryKey: ['me'],
+    queryKey: ['currentUser'],
     queryFn: () => authService.getCurrentUser(),
     retry: false,
   });
@@ -140,7 +140,7 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-sm font-medium">{user?.name || 'User'}</p>
-                <p className="text-xs text-muted-foreground">{(user as any)?.roles?.[0] || 'Guest'}</p>
+                <p className="text-xs text-muted-foreground">{(user as any)?.roles?.[0] || 'Member'}</p>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>

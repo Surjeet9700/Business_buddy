@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { formController } from '@/controllers/form.controller';
+import { protect } from '@/middleware/auth.middleware';
 
 const router = Router();
+
+router.use(protect); // Protect all routes
 
 router.get('/', formController.getAll);
 router.post('/', formController.create);

@@ -1,6 +1,6 @@
 import { db } from '@/config/database';
 import { AppError, NotFoundError } from '@/utils/AppError';
-import { Prisma, AppRole } from '@prisma-client';
+import { Prisma, AppRole } from '@prisma/client';
 
 export class WorkflowService {
     private static instance: WorkflowService;
@@ -13,17 +13,31 @@ export class WorkflowService {
         return WorkflowService.instance;
     }
 
-    public async findAll(params: { page?: number; pageSize?: number }) {
+    public async findAll(params: {
+        page?: number;
+        pageSize?: number;
+        userId?: string;
+        roles?: string[];
+    }) {
         const page = params.page || 1;
         const pageSize = params.pageSize || 20;
 
+        const where: Prisma.WorkflowWhereInput = {};
+
+        // Data Isolation: If not admin, only show own workflows
+        const isAdmin = params.roles?.some(r => r.toLowerCase() === 'admin');
+        if (params.userId && !isAdmin) {
+            where.createdBy = params.userId;
+        }
+
         const [workflows, total] = await Promise.all([
             db.workflow.findMany({
+                where,
                 skip: (page - 1) * pageSize,
                 take: pageSize,
                 orderBy: { createdAt: 'desc' },
             }),
-            db.workflow.count()
+            db.workflow.count({ where })
         ]);
 
         return {

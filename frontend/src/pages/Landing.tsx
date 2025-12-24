@@ -119,58 +119,6 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* Testimonials */}
-                <section className="bg-slate-50 dark:bg-muted/10 py-16 md:py-32">
-                    <div className="container">
-                        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-12">
-                            <h2 className="font-heading text-3xl md:text-5xl font-bold">Loved by teams</h2>
-                        </div>
-                        <div className="grid gap-6 md:grid-cols-3 md:max-w-6xl mx-auto">
-                            <TestimonialCard
-                                quote="Business Buddy transformed how we handle expense reports. It used to take weeks, now it takes hours."
-                                author="Sarah J."
-                                role="Operations Manager"
-                            />
-                            <TestimonialCard
-                                quote="The workflow builder is incredibly intuitive. We automated our entire onboarding process in an afternoon."
-                                author="Michael T."
-                                role="HR Director"
-                            />
-                            <TestimonialCard
-                                quote="Security and compliance were our top concerns. Business Buddy nailed both with their RBAC system."
-                                author="David L."
-                                role="CTO"
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* FAQ */}
-                <section className="container py-16 md:py-32 max-w-4xl">
-                    <div className="mb-12 text-center">
-                        <h2 className="font-heading text-3xl md:text-5xl font-bold">Frequently Asked Questions</h2>
-                    </div>
-                    <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger>Is there a free trial?</AccordionTrigger>
-                            <AccordionContent>
-                                Yes! You can try Business Buddy for free for 14 days. No credit card required.
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-2">
-                            <AccordionTrigger>Can I import existing data?</AccordionTrigger>
-                            <AccordionContent>
-                                Absolutely. We support CSV and JSON imports for users, forms, and historical data.
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-3">
-                            <AccordionTrigger>Is my data secure?</AccordionTrigger>
-                            <AccordionContent>
-                                We use bank-grade encryption and strictly adhere to GDPR and SOC2 compliance standards.
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </section>
 
             </main>
 

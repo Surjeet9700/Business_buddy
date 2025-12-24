@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { userService } from '@/services/user.service';
 import { catchAsync } from '@/utils/asyncWrapper';
 import { z } from 'zod';
-import { AppRole } from '@prisma-client';
+import { AppRole } from '@prisma/client';
 
 const createUserSchema = z.object({
     email: z.string().email(),

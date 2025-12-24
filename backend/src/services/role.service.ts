@@ -1,4 +1,4 @@
-import { Prisma, Role, Permission } from '@prisma-client';
+import { Prisma, Role, Permission } from '@prisma/client';
 import { Database } from '@/config/database';
 import { AppError } from '@/utils/AppError';
 

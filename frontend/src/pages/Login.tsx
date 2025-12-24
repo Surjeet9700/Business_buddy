@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/auth.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,17 +16,22 @@ export default function LoginPage() {
         password: '',
     });
 
+    const queryClient = useQueryClient();
+
     const loginMutation = useMutation({
         mutationFn: authService.login,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             toast.success('Welcome back!', {
                 description: `Logged in as ${data.user.name}`,
             });
-            // Store tokens - backend returns flattened structure
+            // Store tokens
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
 
-            navigate('/');
+            // Invalidate queries to ensure fresh data
+            await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
+            navigate('/dashboard');
         },
         onError: (error: any) => {
             toast.error('Login failed', {

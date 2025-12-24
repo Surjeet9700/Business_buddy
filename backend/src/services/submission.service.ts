@@ -1,6 +1,6 @@
 import { db } from '@/config/database';
 import { AppError, NotFoundError } from '@/utils/AppError';
-import { SubmissionStatus, WorkflowStatus, WorkflowStepStatus, Prisma } from '@prisma-client';
+import { SubmissionStatus, WorkflowStatus, WorkflowStepStatus, Prisma } from '@prisma/client';
 
 export class SubmissionService {
     private static instance: SubmissionService;
@@ -19,6 +19,8 @@ export class SubmissionService {
         formId?: string;
         status?: SubmissionStatus;
         submittedBy?: string;
+        userId?: string;
+        roles?: string[];
     }) {
         const page = params.page || 1;
         const pageSize = params.pageSize || 20;
@@ -26,7 +28,18 @@ export class SubmissionService {
         const where: Prisma.SubmissionWhereInput = {};
         if (params.formId) where.formId = params.formId;
         if (params.status) where.status = params.status;
-        if (params.submittedBy) where.submittedBy = params.submittedBy;
+
+        // Data Isolation logic
+        const isAdmin = params.roles?.some(r => r.toLowerCase() === 'admin');
+
+        // If specific submittedBy requested (e.g. filtering via UI)
+        if (params.submittedBy) {
+            where.submittedBy = params.submittedBy;
+        }
+        // Force filter for non-admins to only see their own submissions
+        else if (params.userId && !isAdmin) {
+            where.submittedBy = params.userId;
+        }
 
         const [submissions, total] = await Promise.all([
             db.submission.findMany({
