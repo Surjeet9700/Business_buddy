@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import { User } from '@/types/user';
+import { User } from '@/types/index';
 
 export const userService = {
     getAll: async (params?: any) => {
