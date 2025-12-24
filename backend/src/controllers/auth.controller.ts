@@ -49,7 +49,12 @@ export class AuthController {
             select: {
                 id: true,
                 email: true,
-                name: true
+                name: true,
+                userRoles: {
+                    include: {
+                        role: true
+                    }
+                }
             }
         });
 
@@ -57,7 +62,14 @@ export class AuthController {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        res.status(200).json({ success: true, data: user });
+        const userWithRoles = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            roles: user.userRoles.map((ur: any) => ur.role.name)
+        };
+
+        res.status(200).json({ success: true, data: userWithRoles });
     });
 }
 

@@ -24,7 +24,7 @@ export default function ProfilePage() {
     queryFn: authService.getCurrentUser,
   });
 
-  const currentUser = userResponse?.data;
+  const currentUser = userResponse;
 
   // Local state for form fields
   const [name, setName] = useState('');
@@ -114,7 +114,7 @@ export default function ProfilePage() {
                 <h3 className="font-semibold">{currentUser.name}</h3>
                 <p className="text-sm text-muted-foreground">{currentUser.email}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  {currentUser.roles && currentUser.roles.map((role: string) => (
+                  {(currentUser as any).roles && (currentUser as any).roles.map((role: string) => (
                     <Badge key={role} variant="outline" className="bg-primary/10 text-primary border-primary/20">
                       <Shield className="h-3 w-3 mr-1" />
                       {role}

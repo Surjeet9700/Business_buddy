@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import { LoginCredentials, RegisterCredentials, AuthResponse, User } from '@/types/index';
+import { LoginCredentials, RegisterCredentials, AuthResponse, RegisterResponse, User } from '@/types/index';
 
 export const authService = {
     login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
@@ -7,7 +7,7 @@ export const authService = {
         return response.data.data;
     },
 
-    register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
+    register: async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
         const response = await api.post('/auth/register', credentials);
         return response.data.data;
     },

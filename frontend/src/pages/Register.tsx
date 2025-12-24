@@ -22,13 +22,10 @@ export default function RegisterPage() {
         mutationFn: authService.register,
         onSuccess: (data) => {
             toast.success('Account created!', {
-                description: 'You have successfully signed up. Welcome aboard!',
+                description: 'You have successfully signed up. Please sign in to continue.',
             });
-            // Store tokens
-            localStorage.setItem('accessToken', data.tokens.access.token);
-            localStorage.setItem('refreshToken', data.tokens.refresh.token);
-
-            navigate('/');
+            // Redirect to login since backend doesn't auto-login on register
+            navigate('/login');
         },
         onError: (error: any) => {
             toast.error('Registration failed', {

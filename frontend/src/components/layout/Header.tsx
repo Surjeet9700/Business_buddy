@@ -37,7 +37,7 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
   });
 
   const notifications = notificationsData?.data || [];
-  const notificationsCount = notificationsData?.meta?.total || 0;
+  const notificationsCount = (notificationsData as any)?.meta?.total || 0;
 
   const handleLogout = () => {
     authService.logout();
@@ -140,7 +140,7 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-sm font-medium">{user?.name || 'User'}</p>
-                <p className="text-xs text-muted-foreground">{user?.role || 'Guest'}</p>
+                <p className="text-xs text-muted-foreground">{(user as any)?.roles?.[0] || 'Guest'}</p>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>

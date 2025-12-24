@@ -43,7 +43,14 @@ export interface RegisterCredentials {
 
 export interface AuthResponse {
   user: User;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+export interface RegisterResponse {
+  user: User;
+  message: string;
 }
 
 export interface Session {
