@@ -260,8 +260,8 @@ MIT License - feel free to use this project for learning or as a portfolio piece
 ---
 
 ## 👤 Author
-- GitHub: [@yourusername](https://github.com/surjeet9700)
-- LinkedIn: [Your Profile](https://www.linkedin.com/in/surjeet-kumar-/)
+- GitHub: [@surjeet9700](https://github.com/surjeet9700)
+- LinkedIn: [surjeet kumar](https://www.linkedin.com/in/surjeet-kumar-/)
 
 ---
 
