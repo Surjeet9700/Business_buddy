@@ -35,6 +35,15 @@ class App {
             res.status(200).json({ status: 'ok', timestamp: new Date() });
         });
 
+        this.app.get('/', (req: Request, res: Response) => {
+            res.status(200).json({
+                service: 'Business-Buddy API',
+                status: 'active',
+                version: '1.0.0',
+                health_check: '/health'
+            });
+        });
+
         // API Routes
         this.app.use('/api/v1/auth', authRoutes);
         this.app.use('/api/v1/users', userRoutes);
