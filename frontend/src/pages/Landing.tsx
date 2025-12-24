@@ -60,11 +60,11 @@ export default function LandingPage() {
                         </div>
 
                         {/* Hero Image/Preview Mockup Placeholder */}
-                        <div className="mt-16 rounded-xl border bg-card p-2 shadow-2xl shadow-primary/10 w-full max-w-5xl overflow-hidden animate-slide-up">
+                        {/* <div className="mt-16 rounded-xl border bg-card p-2 shadow-2xl shadow-primary/10 w-full max-w-5xl overflow-hidden animate-slide-up">
                             <div className="rounded-lg bg-muted/50 aspect-video flex items-center justify-center border border-dashed">
                                 <div className="text-muted-foreground font-medium">Dashboard Preview</div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </section>
 
@@ -129,7 +129,7 @@ export default function LandingPage() {
                         <span>Business Buddy</span>
                     </div>
                     <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                        © 2024 Business Buddy Inc. All rights reserved.
+                        © 2025 Business Buddy Inc. All rights reserved.
                     </p>
                 </div>
             </footer>
