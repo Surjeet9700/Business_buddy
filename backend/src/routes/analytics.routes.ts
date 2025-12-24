@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { AnalyticsController } from '@/controllers/analytics.controller';
-import { protect } from '@/middleware/auth.middleware';
+import { AnalyticsController } from '../controllers/analytics.controller';
+import { protect } from '../middleware/auth.middleware';
 
 export const analyticsRoutes = Router();
 

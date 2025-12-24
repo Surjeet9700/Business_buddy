@@ -1,6 +1,6 @@
-import { app } from '@/app';
-import { env } from '@/config/env';
-import { database } from '@/config/database';
+import { app } from './app';
+import { env } from './config/env';
+import { database } from './config/database';
 
 const startServer = async () => {
     try {

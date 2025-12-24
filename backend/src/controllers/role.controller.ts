@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '@/utils/asyncWrapper';
-import { roleService } from '@/services/role.service';
+import { catchAsync } from '../utils/asyncWrapper';
+import { roleService } from '../services/role.service';
 import { z } from 'zod';
 
 const togglePermissionSchema = z.object({

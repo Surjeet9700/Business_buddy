@@ -1,5 +1,5 @@
-import { db } from '@/config/database';
-import { AppError, NotFoundError } from '@/utils/AppError';
+import { db } from '../config/database';
+import { AppError, NotFoundError } from '../utils/AppError';
 import { SubmissionStatus, WorkflowStatus, WorkflowStepStatus, Prisma } from '@prisma/client';
 
 export class SubmissionService {

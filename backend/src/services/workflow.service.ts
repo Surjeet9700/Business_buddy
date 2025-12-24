@@ -1,5 +1,5 @@
-import { db } from '@/config/database';
-import { AppError, NotFoundError } from '@/utils/AppError';
+import { db } from '../config/database';
+import { AppError, NotFoundError } from '../utils/AppError';
 import { Prisma, AppRole } from '@prisma/client';
 
 export class WorkflowService {

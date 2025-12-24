@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { submissionController } from '@/controllers/submission.controller';
-import { protect } from '@/middleware/auth.middleware';
+import { submissionController } from '../controllers/submission.controller';
+import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
 

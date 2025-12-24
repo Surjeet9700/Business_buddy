@@ -2,15 +2,15 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { globalErrorHandler } from '@/middleware/error.middleware';
-import { AppError } from '@/utils/AppError';
-import { authRoutes } from '@/routes/auth.routes';
-import { userRoutes } from '@/routes/user.routes';
-import { formRoutes } from '@/routes/form.routes';
-import { workflowRoutes } from '@/routes/workflow.routes';
-import { submissionRoutes } from '@/routes/submission.routes';
-import { analyticsRoutes } from '@/routes/analytics.routes';
-import roleRoutes from '@/routes/role.routes';
+import { globalErrorHandler } from './middleware/error.middleware';
+import { AppError } from './utils/AppError';
+import { authRoutes } from './routes/auth.routes';
+import { userRoutes } from './routes/user.routes';
+import { formRoutes } from './routes/form.routes';
+import { workflowRoutes } from './routes/workflow.routes';
+import { submissionRoutes } from './routes/submission.routes';
+import { analyticsRoutes } from './routes/analytics.routes';
+import roleRoutes from './routes/role.routes';
 
 class App {
     public app: Application;

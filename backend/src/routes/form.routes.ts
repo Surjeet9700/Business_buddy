@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { formController } from '@/controllers/form.controller';
-import { protect } from '@/middleware/auth.middleware';
+import { formController } from '../controllers/form.controller';
+import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { userService } from '@/services/user.service';
-import { catchAsync } from '@/utils/asyncWrapper';
+import { userService } from '../services/user.service';
+import { catchAsync } from '../utils/asyncWrapper';
 import { z } from 'zod';
 import { AppRole } from '@prisma/client';
 

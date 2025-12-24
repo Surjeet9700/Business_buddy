@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { catchAsync } from '@/utils/asyncWrapper';
-import { AuditService } from '@/services/audit.service';
+import { catchAsync } from '../utils/asyncWrapper';
+import { AuditService } from '../services/audit.service';
 import { z } from 'zod';
 
 export class AuditController {

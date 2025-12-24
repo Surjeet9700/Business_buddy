@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { submissionService } from '@/services/submission.service';
-import { catchAsync } from '@/utils/asyncWrapper';
+import { submissionService } from '../services/submission.service';
+import { catchAsync } from '../utils/asyncWrapper';
 import { z } from 'zod';
 import { SubmissionStatus } from '@prisma/client';
 

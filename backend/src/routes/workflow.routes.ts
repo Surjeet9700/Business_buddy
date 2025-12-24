@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { workflowController } from '@/controllers/workflow.controller';
-import { protect } from '@/middleware/auth.middleware';
+import { workflowController } from '../controllers/workflow.controller';
+import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
 

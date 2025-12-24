@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AppError, UnauthorizedError } from '@/utils/AppError';
-import { env } from '@/config/env';
-import { db } from '@/config/database';
+import { AppError, UnauthorizedError } from '../utils/AppError';
+import { env } from '../config/env';
+import { db } from '../config/database';
 
 interface JwtPayload {
     userId: string;

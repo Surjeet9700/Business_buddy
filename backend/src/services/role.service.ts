@@ -1,6 +1,6 @@
 import { Prisma, Role, Permission } from '@prisma/client';
-import { Database } from '@/config/database';
-import { AppError } from '@/utils/AppError';
+import { Database } from '../config/database';
+import { AppError } from '../utils/AppError';
 
 export class RoleService {
     private static instance: RoleService;

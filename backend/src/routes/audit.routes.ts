@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AuditController } from '@/controllers/audit.controller';
+import { AuditController } from '../controllers/audit.controller';
 
 export const auditRoutes = Router();
 

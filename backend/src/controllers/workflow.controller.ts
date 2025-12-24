@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { workflowService } from '@/services/workflow.service';
-import { catchAsync } from '@/utils/asyncWrapper';
+import { workflowService } from '../services/workflow.service';
+import { catchAsync } from '../utils/asyncWrapper';
 import { z } from 'zod';
 import { AppRole } from '@prisma/client';
 

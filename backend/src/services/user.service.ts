@@ -1,5 +1,5 @@
-import { db } from '@/config/database';
-import { AppError, NotFoundError } from '@/utils/AppError';
+import { db } from '../config/database';
+import { AppError, NotFoundError } from '../utils/AppError';
 import { User, AppRole, Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 

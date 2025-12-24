@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { authService } from '@/services/auth.service';
-import { catchAsync } from '@/utils/asyncWrapper';
+import { authService } from '../services/auth.service';
+import { catchAsync } from '../utils/asyncWrapper';
 import { z } from 'zod';
 
 const registerSchema = z.object({
@@ -44,7 +44,7 @@ export class AuthController {
     public getCurrentUser = catchAsync(async (req: Request, res: Response) => {
         // TODO: Get user from authenticated request (req.user)
         // For now, return first user from database
-        const { db } = await import('@/config/database');
+        const { db } = await import('../config/database');
 
         if (!req.user || !req.user.id) {
             return res.status(401).json({ success: false, message: 'Not authenticated' });

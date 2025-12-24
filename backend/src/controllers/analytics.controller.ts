@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { catchAsync } from '@/utils/asyncWrapper';
-import { Database } from '@/config/database';
+import { catchAsync } from '../utils/asyncWrapper';
+import { Database } from '../config/database';
 
 export class AnalyticsController {
   static getDashboardStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -75,6 +75,7 @@ export class AnalyticsController {
     // Note: Prisma raw query with conditional where is tricky.
     // We will use Prisma.sql helper variables.
     const { Prisma } = await import('@prisma/client');
+    const { db } = await import('../config/database');
 
     // Base condition: last 6 months
     // If not admin, add AND submitted_by = userId

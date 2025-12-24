@@ -1,8 +1,8 @@
-import { db } from '@/config/database';
-import { AppError, BadRequestError, UnauthorizedError } from '@/utils/AppError';
+import { db } from '../config/database';
+import { AppError, BadRequestError, UnauthorizedError } from '../utils/AppError';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { env } from '@/config/env';
+import { env } from '../config/env';
 import { User, AppRole } from '@prisma/client';
 
 interface RegisterDto {

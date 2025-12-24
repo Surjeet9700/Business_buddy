@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { formService } from '@/services/form.service';
-import { catchAsync } from '@/utils/asyncWrapper';
+import { formService } from '../services/form.service';
+import { catchAsync } from '../utils/asyncWrapper';
 import { z } from 'zod';
 
 const createFormSchema = z.object({
