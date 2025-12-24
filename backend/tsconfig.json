@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
+        "target": "es2019",
+        "module": "commonjs",
         "lib": [
             "esnext"
         ],
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "strict": true,
         "importHelpers": true,
         "noEmit": true,
